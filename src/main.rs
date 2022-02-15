@@ -16,7 +16,6 @@ struct Event {
 #[derive(Deserialize, Debug)]
 struct Response {
     data: Vec<Event>,
-    success: bool,
 }
 
 fn main() {
