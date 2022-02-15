@@ -1,0 +1,29 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: publish
+        run: |
+          git config --global user.name 'ajou-hack-bot'
+          git config --global user.email 'bot@ajou-hack.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ajou-hack/event-ical
+          cargo build --release
+          RESULT=$(./target/release/event-ical)
+          echo $RESULT > event.ical
+          git add -A
+          git commit -m "dist: $(date)"
+          git push origin master
+
+
