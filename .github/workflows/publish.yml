@@ -21,7 +21,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ajou-hack/event-ics
           cargo build --release
           RESULT=$(./target/release/event-ics)
-          echo $RESULT > event.ics
+          echo -e $RESULT > event.ics
           git add -A
           git commit -m "dist: $(date)"
           git push origin main

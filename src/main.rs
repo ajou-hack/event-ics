@@ -23,7 +23,7 @@ fn main() {
     let result = compose_ical(&events);
 
     if !result.is_empty() {
-        println!("{}", result);
+        println!(r#"{}"#, result);
     } else {
         eprintln!("empty events");
     }
@@ -50,13 +50,13 @@ fn fetch_events() -> Vec<Event> {
 }
 
 fn compose_ical(events: &[Event]) -> String {
-    let header = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Ajou University/학사일정//KR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH";
+    let header = r#"BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Ajou University/학사일정//KR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH"#;
 
     let items = events
         .iter()
         .map(|event| -> String {
             format!(
-                "BEGIN:VEVENT\nSUMMARY:{}\nDTSTART:{}\nDTEND:{}\nEND:VEVENT",
+                r#"BEGIN:VEVENT\nSUMMARY:{}\nDTSTART:{}\nDTEND:{}\nEND:VEVENT"#,
                 event.title,
                 format!("{}{}", event.start_y, event.start_dt.replace("-", "")),
                 format!("{}{}", event.end_y, event.end_dt.replace("-", "")),
@@ -67,7 +67,7 @@ fn compose_ical(events: &[Event]) -> String {
         .collect::<Vec<String>>()
         .join("\n");
 
-    let footer = "END:VCALENDAR";
+    let footer = r#"END:VCALENDAR"#;
 
-    format!("{}\n{}\n{}", header, items, footer)
+    format!(r#"{}\n{}\n{}"#, header, items, footer)
 }
