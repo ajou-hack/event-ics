@@ -47,6 +47,8 @@ fn fetch_events(year: i32, month: i32) -> Vec<Event> {
         .unwrap()
         .get(&url)
         .header("User-Agent", "Mozilla/5.0")
+        .header("Connection", "keep-alive")
+        .header("Cache-Control", "no-cache")
         .send()
         .unwrap();
 
