@@ -1,4 +1,6 @@
+use chrono::Utc;
 use serde::Deserialize;
+use uuid::Uuid;
 
 #[derive(Deserialize, Debug)]
 struct Event {
@@ -56,16 +58,18 @@ fn compose_ical(events: &[Event]) -> String {
         .iter()
         .map(|event| -> String {
             format!(
-                r#"BEGIN:VEVENT\nSUMMARY:{}\nDTSTART:{}\nDTEND:{}\nEND:VEVENT"#,
+                r#"BEGIN:VEVENT\nUID:{}\nSUMMARY:{}\nDTSTART:{}\nDTEND:{}\nDTSTAMP:{}\nEND:VEVENT"#,
+                Uuid::new_v4(),
                 event.title,
                 format!("{}{}", event.start_y, event.start_dt.replace("-", "")),
                 format!("{}{}", event.end_y, event.end_dt.replace("-", "")),
+                Utc::now().format("%Y%m%dT%H%M%SZ"),
             )
             .trim()
             .to_string()
         })
         .collect::<Vec<String>>()
-        .join("\n");
+        .join(r#"\n"#);
 
     let footer = r#"END:VCALENDAR"#;
 
