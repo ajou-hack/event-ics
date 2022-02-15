@@ -24,6 +24,5 @@ jobs:
           echo $RESULT > event.ics
           git add -A
           git commit -m "dist: $(date)"
-          git push origin master
-
+          git push origin main
 
