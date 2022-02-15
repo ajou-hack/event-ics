@@ -1,18 +1,13 @@
-use chrono::Utc;
+use chrono::{Datelike, Utc};
 use serde::Deserialize;
+use std::{thread, time::Duration};
 use uuid::Uuid;
 
 #[derive(Deserialize, Debug)]
 struct Event {
     title: String,
-    #[serde(alias = "startDt")]
-    start_dt: String,
-    #[serde(alias = "endDt")]
-    end_dt: String,
-    #[serde(alias = "startY")]
-    start_y: String,
-    #[serde(alias = "endY")]
-    end_y: String,
+    start: String,
+    end: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -21,7 +16,13 @@ struct Response {
 }
 
 fn main() {
-    let events = fetch_events();
+    let year = Utc::now().year();
+    let events = (1..13)
+        .flat_map(|month| -> Vec<Event> {
+            thread::sleep(Duration::from_millis(500));
+            fetch_events(year, month)
+        })
+        .collect::<Vec<Event>>();
     let result = compose_ical(&events);
 
     if !result.is_empty() {
@@ -31,9 +32,9 @@ fn main() {
     }
 }
 
-fn fetch_events() -> Vec<Event> {
+fn fetch_events(year: i32, month: i32) -> Vec<Event> {
     let base_url = "https://www.ajou.ac.kr/kr/ajou/notice-calendar.do";
-    let params = "mode=calendar";
+    let params = format!("mode=calendar&date={}-{:02}-01", year, month);
     let url = format!("{}?{}", base_url, params);
 
     let response = reqwest::blocking::Client::builder()
@@ -61,8 +62,8 @@ fn compose_ical(events: &[Event]) -> String {
                 r#"BEGIN:VEVENT\nUID:{}\nSUMMARY:{}\nDTSTART:{}\nDTEND:{}\nDTSTAMP:{}\nEND:VEVENT"#,
                 Uuid::new_v4(),
                 event.title,
-                format!("{}{}", event.start_y, event.start_dt.replace("-", "")),
-                format!("{}{}", event.end_y, event.end_dt.replace("-", "")),
+                event.start.replace("-", ""),
+                event.end.replace("-", ""),
                 Utc::now().format("%Y%m%dT%H%M%SZ"),
             )
             .trim()
