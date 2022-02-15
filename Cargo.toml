@@ -13,3 +13,4 @@ serde_json = "1.0"
 tokio = "0.2"
 chrono = "0.4"
 uuid = { version = "0.8", features = ["v4"] }
+itertools = "0.10"

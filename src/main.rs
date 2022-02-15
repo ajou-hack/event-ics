@@ -1,10 +1,13 @@
 use chrono::{Datelike, Utc};
+use itertools::Itertools;
 use serde::Deserialize;
 use std::{thread, time::Duration};
 use uuid::Uuid;
 
 #[derive(Deserialize, Debug)]
 struct Event {
+    #[serde(alias = "articleNo")]
+    article_no: i32,
     title: String,
     start: String,
     end: String,
@@ -19,9 +22,10 @@ fn main() {
     let year = Utc::now().year();
     let events = (1..13)
         .flat_map(|month| -> Vec<Event> {
-            thread::sleep(Duration::from_millis(500));
+            thread::sleep(Duration::from_millis(1000));
             fetch_events(year, month)
         })
+        .unique_by(|event| event.article_no)
         .collect::<Vec<Event>>();
     let result = compose_ical(&events);
 
