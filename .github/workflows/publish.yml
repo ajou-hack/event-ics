@@ -18,10 +18,10 @@ jobs:
         run: |
           git config --global user.name 'ajou-hack-bot'
           git config --global user.email 'bot@ajou-hack.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ajou-hack/event-ical
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ajou-hack/event-ics
           cargo build --release
-          RESULT=$(./target/release/event-ical)
-          echo $RESULT > event.ical
+          RESULT=$(./target/release/event-ics)
+          echo $RESULT > event.ics
           git add -A
           git commit -m "dist: $(date)"
           git push origin master
