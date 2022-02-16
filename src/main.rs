@@ -1,5 +1,6 @@
 use chrono::{Datelike, Utc};
 use itertools::Itertools;
+use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::{thread, time::Duration};
 use uuid::Uuid;
@@ -19,14 +20,20 @@ struct Response {
 }
 
 fn main() {
+    let client = Client::builder()
+        .danger_accept_invalid_certs(true)
+        .build()
+        .unwrap();
+
     let year = Utc::now().year();
     let events = (1..13)
         .flat_map(|month| -> Vec<Event> {
             thread::sleep(Duration::from_millis(1000));
-            fetch_events(year, month)
+            fetch_events(year, month, &client)
         })
         .unique_by(|event| event.article_no)
         .collect::<Vec<Event>>();
+
     let result = compose_ical(&events);
 
     if !result.is_empty() {
@@ -36,15 +43,12 @@ fn main() {
     }
 }
 
-fn fetch_events(year: i32, month: i32) -> Vec<Event> {
+fn fetch_events(year: i32, month: i32, client: &Client) -> Vec<Event> {
     let base_url = "https://www.ajou.ac.kr/kr/ajou/notice-calendar.do";
     let params = format!("mode=calendar&date={}-{:02}-01", year, month);
     let url = format!("{}?{}", base_url, params);
 
-    let response = reqwest::blocking::Client::builder()
-        .danger_accept_invalid_certs(true)
-        .build()
-        .unwrap()
+    let response = client
         .get(&url)
         .header("User-Agent", "Mozilla/5.0")
         .header("Connection", "keep-alive")
