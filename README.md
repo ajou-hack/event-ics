@@ -9,5 +9,4 @@
 
 ## License
 
-This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details.
-
+This project is licensed under Apache License 2.0. See the [LICENSE](LICENSE) file for details.
