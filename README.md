@@ -1,6 +1,6 @@
 # 학사일정
 
-아주대학교 학사일정을 범용 달력 형식(.ics)으로 제공합니다. 일정 데이터는 아주대학교 홈페이지의 [아주광장 > 캘린더](https://www.ajou.ac.kr/kr/ajou/notice-calendar.do) 페이지로부터 매월 1일 스크래핑하고 있습니다.
+아주대학교 학사일정을 [범용 캘린더 형식](https://datatracker.ietf.org/doc/html/rfc5545)으로 제공합니다. 학사일정 데이터는 아주대학교 홈페이지의 [아주광장 > 캘린더](https://www.ajou.ac.kr/kr/ajou/notice-calendar.do) 페이지를 매월 1일 스크래핑하여 업데이트하고 있습니다.
 
 ## 사용법
 
