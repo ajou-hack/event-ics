@@ -27,9 +27,9 @@ fn main() {
 
     let now = Utc::now();
     let years = if Utc::now().month() < 12 {
-        vec![now.year()]
+        [now.year() - 1, now.year()]
     } else {
-        vec![now.year(), now.year() + 1]
+        [now.year(), now.year() + 1]
     };
 
     let events = years
