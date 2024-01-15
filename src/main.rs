@@ -44,7 +44,6 @@ fn main() {
                 .collect::<Vec<Event>>()
         })
         .collect::<Vec<Event>>();
-    println!("events: {}", events.len());
 
     let result = compose_ical(&events);
 
