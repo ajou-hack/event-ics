@@ -27,9 +27,9 @@ fn main() {
 
     let now = Utc::now();
     let years = if Utc::now().month() < 12 {
-        [now.year(); 2]
+        vec![now.year()]
     } else {
-        [now.year(), now.year() + 1]
+        vec![now.year(), now.year() + 1]
     };
 
     let events = years
@@ -44,6 +44,7 @@ fn main() {
                 .collect::<Vec<Event>>()
         })
         .collect::<Vec<Event>>();
+    println!("events: {}", events.len());
 
     let result = compose_ical(&events);
 
